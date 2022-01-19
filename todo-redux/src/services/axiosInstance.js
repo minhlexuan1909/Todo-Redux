@@ -1,6 +1,5 @@
 import axios from "axios";
 import queryString from "query-string";
-import { getLocalStorage } from "../localStorage";
 
 export const axiosInstance = axios.create({
   withCredentials: false,
