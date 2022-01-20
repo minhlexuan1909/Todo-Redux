@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 
 import { AuthForm } from "../../components/AuthForm";
-import { errRegisterMessageSelector } from "../../services/authSlice";
 import { registerThunk } from "../../services/authThunk";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
-  const errRegisterMessage = useSelector(errRegisterMessageSelector);
   const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -24,15 +21,7 @@ const RegisterPage = () => {
       confirmPassword: passwordConfirm,
     };
     dispatch(registerThunk(data));
-    // if (errRegisterMessage) {
-    //   toast.error(errRegisterMessage);
-    // }
   };
-  useEffect(() => {
-    if (errRegisterMessage) {
-      toast.error(errRegisterMessage);
-    }
-  }, [errRegisterMessage]);
   const handleFullnameChange = (e) => {
     setFullname(e.target.value);
   };
