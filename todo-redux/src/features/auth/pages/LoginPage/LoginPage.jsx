@@ -10,7 +10,6 @@ import { loginThunk } from "../../services/authThunk";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  // const token = useSelector(authTokenSelector);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 

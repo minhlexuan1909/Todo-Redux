@@ -1,21 +1,11 @@
 import "./AuthForm.scss";
 import "react-toastify/dist/ReactToastify.css";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Card } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { toast, ToastContainer } from "react-toastify";
-
-import { errLoginMessageSelector } from "../services/authSlice";
+import { ToastContainer } from "react-toastify";
 
 export const AuthForm = ({ title, children }) => {
-  const errLoginMessage = useSelector(errLoginMessageSelector);
-  useEffect(() => {
-    if (errLoginMessage) {
-      toast.error(errLoginMessage);
-    }
-  }, []);
-
   return (
     <div className="auth-form">
       <ToastContainer
