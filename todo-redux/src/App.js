@@ -2,7 +2,7 @@ import "./App.css";
 
 import { BrowserRouter } from "react-router-dom";
 
-import AppRoute from "./routers/PrivateRoutes";
+import AppRoute from "./routers";
 
 function App() {
   return (

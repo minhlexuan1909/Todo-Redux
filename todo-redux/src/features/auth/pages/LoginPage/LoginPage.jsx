@@ -1,15 +1,18 @@
 import "./LoginPage.scss";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 import { AuthForm } from "../../components/AuthForm";
 import { loginThunk } from "../../services/authThunk";
+import { authTokenSelector } from "../../services/authSlice";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
+  const token = useSelector(authTokenSelector);
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -26,6 +29,12 @@ const LoginPage = () => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [token]);
+
   return (
     <div className="login-page">
       <AuthForm title={"Login"}>
