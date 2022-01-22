@@ -1,0 +1,13 @@
+/
+problem
+-> reason
+=> solution
+/
+
+store change but useSelector doesn't update (in TodoThunk.js)
+-> immer object (immutable object: like list of objects)
+=> action.payload.map((item) => state.push(item));
+
+toast doesn't load at start
+-> ToastContainer didn't load yet
+=> Put ToastContainer at App
