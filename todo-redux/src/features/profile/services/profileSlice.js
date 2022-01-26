@@ -5,7 +5,6 @@ import {
   editInfoThunk,
   getInfoThunk,
 } from "./profileThunk";
-import { axiosInstance } from "../../../services/axiosInstance";
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
@@ -25,21 +24,29 @@ const profileSlice = createSlice({
         toast.success("Change password successfully");
       }
     });
+    builder.addCase(getInfoThunk.pending, () => {
+      toast.warn("Loading informations...");
+    });
     builder.addCase(getInfoThunk.fulfilled, (state, action) => {
       if ("error" in action.payload) {
         console.log(action.payload.error.message);
       } else {
+        toast.success("Informations loaded");
         state.id = action.payload.id;
         state.name = action.payload.name;
         state.username = action.payload.username;
         state.email = action.payload.email;
       }
     });
+    builder.addCase(editInfoThunk.pending, () => {
+      toast.warn("Changing informations...");
+    });
     builder.addCase(editInfoThunk.fulfilled, (state, action) => {
       if ("error" in action.payload) {
         const errEditInfoMess = action.payload.error.message;
         toast.error(errEditInfoMess);
       } else {
+        toast.success("Change informations successfully");
         state.id = action.payload.id;
         state.name = action.payload.name;
         state.username = action.payload.username;

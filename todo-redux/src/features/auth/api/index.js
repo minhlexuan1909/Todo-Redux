@@ -8,6 +8,10 @@ const AuthAPI = {
     const url = "Accounts";
     return axiosInstance.post(url, data);
   },
+  logout: () => {
+    const url = "Accounts/logout";
+    return axiosInstance.post(url);
+  },
 };
 
 export default AuthAPI;
