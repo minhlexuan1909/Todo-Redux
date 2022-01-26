@@ -14,7 +14,6 @@ const DashBoardPage = () => {
   const dispatch = useDispatch();
   const todoList = useSelector(todoListSelector);
   const token = useSelector(authTokenSelector);
-  console.log(todoList);
 
   useEffect(() => {
     const data = {
@@ -28,7 +27,7 @@ const DashBoardPage = () => {
       <Header></Header>
       <div className="todo">
         {todoList.map((todo) => (
-          <Todo todo={todo} />
+          <Todo key={todo.id} todo={todo} />
         ))}
       </div>
     </div>

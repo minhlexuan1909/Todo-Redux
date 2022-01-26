@@ -7,6 +7,10 @@ import PrivateRoutes from "./PrivateRoutes/PrivateRoutes";
 
 const routes = [
   {
+    path: "",
+    element: <LoginPage />,
+  },
+  {
     path: "login",
     element: <LoginPage />,
   },

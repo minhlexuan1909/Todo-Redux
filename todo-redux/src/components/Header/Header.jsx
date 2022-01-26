@@ -15,12 +15,8 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <div className="main-nav">
-                <Nav.Link>
-                  <Link to="/dashboard">List Todo</Link>
-                </Nav.Link>
-                <Nav.Link>
-                  <Link to="/dashboard">Create Todo</Link>
-                </Nav.Link>
+                <Nav.Link href="/dashboard">List Todo</Nav.Link>
+                <Nav.Link href="/dashboard">Create Todo</Nav.Link>
               </div>
               <NavDropdown title={`Hello, Minh`} id="basic-nav-dropdown">
                 <NavDropdown.Item href="/dashboard/profile">

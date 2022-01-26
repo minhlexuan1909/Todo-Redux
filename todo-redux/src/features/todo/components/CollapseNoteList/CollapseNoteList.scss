@@ -1,0 +1,23 @@
+.note-list {
+  .card-body {
+    display: flex;
+    flex-direction: row;
+  }
+  .card-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 0%;
+  }
+  .buttons {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.appear {
+  opacity: 1;
+}
+.disappear {
+  opacity: 0;
+}

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { ButtonGroup, Card, ToggleButton } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer } from "react-toastify";
 import {
   authTokenSelector,
   userIdSelector,
@@ -21,7 +20,7 @@ const Todo = ({ todo }) => {
       token: token,
       isDone: Math.abs(todo.isDone - 1),
     };
-    dispatch(todoAction.toggleStatusTodo(todo.id));
+    // dispatch(todoAction.toggleStatusTodo(todo.id));
     dispatch(toggleStatusTodoThunk(data));
   };
 
@@ -30,7 +29,13 @@ const Todo = ({ todo }) => {
       <Card>
         <Card.Body>
           <div className="todo-content">
-            <Card.Title>{todo.name}</Card.Title>
+            {todo.isDone ? (
+              <Card.Title style={{ textDecoration: "line-through" }}>
+                {todo.name}
+              </Card.Title>
+            ) : (
+              <Card.Title>{todo.name}</Card.Title>
+            )}
             <ButtonGroup>
               <ToggleButton
                 type="check-box"
@@ -41,7 +46,7 @@ const Todo = ({ todo }) => {
               </ToggleButton>
             </ButtonGroup>
           </div>
-          <CollapseNoteList notes={todo.notes} />
+          <CollapseNoteList id={todo.id} notes={todo.notes} />
         </Card.Body>
       </Card>
     </div>

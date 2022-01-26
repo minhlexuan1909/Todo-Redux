@@ -35,6 +35,8 @@ const ProfilePage = () => {
     dispatch(getInfoThunk(data));
   }, []);
   const handleEditButtonClick = () => {
+    setNameInput(nameInfo);
+    setEmailInput(emailInfo);
     if (isEdit) {
       const data = {
         id: id,
