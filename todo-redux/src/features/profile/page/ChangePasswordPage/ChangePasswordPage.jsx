@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import Header from "../../../../components/Header/Header";
-import { authTokenSelector } from "../../../auth/services/authSlice";
+import {
+  authTokenSelector,
+  userIdSelector,
+} from "../../../auth/services/authSlice";
 import ListSetting from "../../components/ListSetting/ListSetting";
 import ProfileForm from "../../components/ProfileForm/ProfileForm";
-import { changePasswordThunk } from "../../services/profileThunk";
+import { nameSelector } from "../../services/profileSlice";
+import { changePasswordThunk, getInfoThunk } from "../../services/profileThunk";
 
 const ChangePasswordPage = () => {
   const dispatch = useDispatch();
+  const id = useSelector(userIdSelector);
   const token = useSelector(authTokenSelector);
+  const fullname = useSelector(nameSelector);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
@@ -30,9 +36,16 @@ const ChangePasswordPage = () => {
     };
     dispatch(changePasswordThunk(data));
   };
+  useEffect(() => {
+    const data = {
+      id: id,
+      token: token,
+    };
+    dispatch(getInfoThunk(data));
+  }, []);
   return (
     <div>
-      <Header></Header>
+      <Header fullname={fullname}></Header>
       <div style={{ display: "flex" }}>
         <ListSetting></ListSetting>
         <ProfileForm title={"Change Password"}>

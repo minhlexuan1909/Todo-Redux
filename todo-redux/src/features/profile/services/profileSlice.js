@@ -31,6 +31,7 @@ const profileSlice = createSlice({
       if ("error" in action.payload) {
         console.log(action.payload.error.message);
       } else {
+        // console.log("dafuq");
         toast.success("Informations loaded");
         state.id = action.payload.id;
         state.name = action.payload.name;

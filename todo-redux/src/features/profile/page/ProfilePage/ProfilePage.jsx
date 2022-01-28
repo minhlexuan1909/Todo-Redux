@@ -56,7 +56,7 @@ const ProfilePage = () => {
   };
   return (
     <div>
-      <Header></Header>
+      <Header fullname={nameInfo}></Header>
       <div style={{ display: "flex" }}>
         <ListSetting></ListSetting>
         <ProfileForm title={"Profile"}>

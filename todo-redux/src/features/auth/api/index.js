@@ -8,9 +8,9 @@ const AuthAPI = {
     const url = "Accounts";
     return axiosInstance.post(url, data);
   },
-  logout: () => {
-    const url = "Accounts/logout";
-    return axiosInstance.post(url);
+  logout: (data) => {
+    const url = `Accounts/logout?access_token=${data}`;
+    return axiosInstance.post(url, data);
   },
 };
 
