@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { loginThunk, registerThunk } from "./authThunk";
+import { loginThunk, logoutThunk, registerThunk } from "./authThunk";
 
 const authSlice = createSlice({
   name: "auth",
@@ -21,10 +21,24 @@ const authSlice = createSlice({
         localStorage.setItem("userId", action.payload.userId);
       }
     });
+    builder.addCase(registerThunk.pending, () => {
+      toast.warn("Creating account...");
+    });
     builder.addCase(registerThunk.fulfilled, (state, action) => {
       if ("error" in action.payload) {
         const errRegisterMessage = action.payload.error.message;
         toast.error(errRegisterMessage);
+      } else {
+        toast.success("Account created");
+      }
+    });
+    builder.addCase(logoutThunk.fulfilled, (state, action) => {
+      if (typeof payload == "Object" && "error" in action.payload) {
+        const errMessage = action.payload.error.message;
+        toast.error(errMessage);
+      } else {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
       }
     });
   },

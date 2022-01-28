@@ -27,3 +27,16 @@ export const registerThunk = createAsyncThunk(
     }
   }
 );
+
+export const logoutThunk = createAsyncThunk(
+  "auth/logoutThunk",
+  async (data) => {
+    try {
+      const response = await AuthAPI.logout(data);
+      return response.data;
+    } catch (err) {
+      console.log(err.response);
+      return err.response.data;
+    }
+  }
+);

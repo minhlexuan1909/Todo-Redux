@@ -8,16 +8,6 @@ import { ToastContainer } from "react-toastify";
 export const AuthForm = ({ title, children }) => {
   return (
     <div className="auth-form">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnHover
-        theme="colored"
-      />
       <Card className="w-50">
         <Card.Header>{title}</Card.Header>
         <Card.Body>{children}</Card.Body>
