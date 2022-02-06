@@ -2,7 +2,9 @@ import LoginPage from "../features/auth/pages/LoginPage/LoginPage";
 import RegisterPage from "../features/auth/pages/RegisterPage/RegisterPage";
 import ChangePasswordPage from "../features/profile/page/ChangePasswordPage/ChangePasswordPage";
 import ProfilePage from "../features/profile/page/ProfilePage/ProfilePage";
+import CreateTodoPage from "../features/todo/pages/CreateTodoPage/CreateTodoPage";
 import DashBoardPage from "../features/todo/pages/DashBoardPage/DashBoardPage";
+import EditTodoPage from "../features/todo/pages/EditTodoPage/EditTodoPage";
 import PrivateRoutes from "./PrivateRoutes/PrivateRoutes";
 
 const routes = [
@@ -29,6 +31,14 @@ const routes = [
   {
     path: "dashboard/profile",
     element: <PrivateRoutes component={<ProfilePage />} />,
+  },
+  {
+    path: "dashboard/create-todo",
+    element: <PrivateRoutes component={<CreateTodoPage />} />,
+  },
+  {
+    path: "dashboard/edit-todo/:idTodo",
+    element: <PrivateRoutes component={<EditTodoPage />} />,
   },
 ];
 export default routes;

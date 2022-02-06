@@ -33,12 +33,14 @@ const authSlice = createSlice({
       }
     });
     builder.addCase(logoutThunk.fulfilled, (state, action) => {
-      if (typeof payload == "Object" && "error" in action.payload) {
+      if (typeof payload === "Object" && "error" in action.payload) {
         const errMessage = action.payload.error.message;
         toast.error(errMessage);
       } else {
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
+        state.token = "";
+        state.userId = 0;
       }
     });
   },

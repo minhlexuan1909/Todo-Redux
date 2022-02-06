@@ -1,0 +1,21 @@
+.todo {
+  width: 50%;
+  margin: 0 auto;
+  .todo-content {
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+  .card-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  // checkbox
+  input {
+    display: inline-block;
+    position: relative;
+    margin-left: 0;
+    margin-right: 0.75rem;
+  }
+}

@@ -1,17 +1,16 @@
-import "./DashBoardPage.scss";
-
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Header from "../../../../components/Header/Header";
-import { authTokenSelector } from "../../../auth/services/authSlice";
+import {
+  authTokenSelector,
+  userIdSelector,
+} from "../../../auth/services/authSlice";
+import { nameSelector } from "../../../profile/services/profileSlice";
+import { getInfoThunk } from "../../../profile/services/profileThunk";
 import Todo from "../../components/Todo/Todo";
 import { todoListSelector } from "../../services/todoSlice";
 import { getTodoThunk } from "../../services/todoThunk";
-import { toast } from "react-toastify";
-import { userIdSelector } from "../../../auth/services/authSlice";
-import { getInfoThunk } from "../../../profile/services/profileThunk";
-import { nameSelector } from "../../../profile/services/profileSlice";
 
 const DashBoardPage = () => {
   const dispatch = useDispatch();
@@ -37,9 +36,9 @@ const DashBoardPage = () => {
   return (
     <div className="dashboard">
       <Header fullname={fullname}></Header>
-      <div className="todo">
-        {todoList.map((todo) => (
-          <Todo key={todo.id} todo={todo} />
+      <div>
+        {todoList.map((todo, index) => (
+          <Todo key={index} todo={todo} />
         ))}
       </div>
     </div>

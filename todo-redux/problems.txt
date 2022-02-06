@@ -6,8 +6,24 @@ problem
 
 store change but useSelector doesn't update (in TodoThunk.js)
 -> immer object (immutable object: like list of objects)
+=> return [...state, ...action.payload];
+=> return [...action.payload]
 => action.payload.map((item) => state.push(item));
 
 toast doesn't load at start
--> ToastContainer didn't load yet
-=> Put ToastContainer at App
+-> ToastContainer hasn't been load yet
+=> Put ToastContainer in App
+
+logout but website doesn't redirect to login page
+-> state hasn't been updated
+=> state.token = ""
+
+map needs return 
+=> use forEach
+
+remove form validation after submit successfully 
+=> validated = true -> form will add .was-validated class so after submitting, set validated = false
+
+Button cannot be invoked without new
+-> Wrong import because of auto import ("bootstrap" instead of "react-bootstrap")
+

@@ -1,0 +1,32 @@
+.create-todo {
+  .card {
+    width: 50%;
+    margin: 0 auto;
+  }
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  // .add-note-text {
+  //   dis
+  // }
+  .add-note-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .add-note-text::before {
+    content: "";
+    display: block;
+    margin-top: -5px;
+    height: 0;
+  }
+  .add-note-text::after {
+    content: "";
+    display: block;
+    margin-bottom: -3px;
+    height: 0;
+  }
+}

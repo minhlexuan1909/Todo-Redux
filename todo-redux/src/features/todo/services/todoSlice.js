@@ -3,8 +3,11 @@ import { toast } from "react-toastify";
 import AuthAPI from "../../auth/api";
 import {
   addNoteThunk,
+  addTodoThunk,
   deleteNoteThunk,
+  deleteTodoThunk,
   editNoteThunk,
+  editTodoThunk,
   getTodoThunk,
   toggleStatusTodoThunk,
 } from "./todoThunk";
@@ -55,6 +58,7 @@ const todoSlice = createSlice({
       toast.warn("Loading Todo...");
     });
     builder.addCase(getTodoThunk.fulfilled, (state, action) => {
+      // state = [];
       if ("error" in action.payload) {
         // console.log(action.payload.error.message);
         if (action.payload.error.statusCode === 401) {
@@ -64,8 +68,9 @@ const todoSlice = createSlice({
         }
       } else {
         // state = action.payload;
-        action.payload.map((item) => state.push(item));
         toast.success("Todolist Loaded");
+        return [...action.payload];
+        // action.payload.map((item) => state.push(item));
       }
     });
     builder.addCase(toggleStatusTodoThunk.pending, () => {
@@ -105,13 +110,13 @@ const todoSlice = createSlice({
       }
     });
     builder.addCase(deleteNoteThunk.pending, () => {
-      toast.warn("Deleting note...");
+      toast.warn("Removing note...");
     });
     builder.addCase(deleteNoteThunk.fulfilled, (state, action) => {
       if (typeof action.payload === "Object" && "error" in action.payload) {
       } else {
-        toast.success("Note deleted");
-        state.map((todo) => {
+        toast.success("Note removed");
+        state.forEach((todo) => {
           const index = todo.notes.findIndex(
             (note) => note.id === action.payload
           );
@@ -131,12 +136,55 @@ const todoSlice = createSlice({
         toast.error(errMessage);
       } else {
         toast.success("Note edited");
-        state.map((todo) => {
+        state.forEach((todo) => {
           let note = todo.notes.find((note) => note.id === action.payload.id);
           if (note) {
             note.content = action.payload.content;
           }
         });
+      }
+    });
+    builder.addCase(addTodoThunk.pending, () => {
+      toast.warn("Creating todo...");
+    });
+    builder.addCase(addTodoThunk.fulfilled, (state, action) => {
+      if ("error" in action.payload) {
+        const errMessage = action.payload.error.message;
+        toast.error(errMessage);
+      } else {
+        toast.success("Todo created");
+        const newTodo = { ...action.payload, notes: [] };
+        state.push(newTodo);
+      }
+    });
+    builder.addCase(editTodoThunk.pending, () => {
+      toast.warn("Editing todo...");
+    });
+    builder.addCase(editTodoThunk.fulfilled, (state, action) => {
+      if ("error" in action.payload) {
+        const errMessage = action.payload.error.message;
+        toast.error(errMessage);
+      } else {
+        toast.success("Todo edited");
+        const curTodo = state.find((todo) => todo.id === action.payload.id);
+        console.log(curTodo);
+        curTodo.name = action.payload.name;
+        curTodo.isDone = action.payload.isDone;
+      }
+    });
+    builder.addCase(deleteTodoThunk.pending, () => {
+      toast.warn("Removing todo...");
+    });
+    builder.addCase(deleteTodoThunk.fulfilled, (state, action) => {
+      if ("error" in action.payload) {
+        const errMessage = action.payload.error.message;
+        toast.error(errMessage);
+      } else {
+        toast.success("Todo removed");
+        const todoFilteredList = state.filter(
+          (todo) => todo.id !== action.payload.id
+        );
+        return [...todoFilteredList];
       }
     });
   },
@@ -146,3 +194,12 @@ export default todoSlice;
 export const todoAction = todoSlice.actions;
 
 export const todoListSelector = (state) => state.todo;
+export const todoListLengthSelector = (state) => {
+  return state.todo.length;
+};
+export const newestTodoIdSelector = (state) => {
+  if (state.todo.length) {
+    const tmpState = [...state.todo];
+    return tmpState[tmpState.length - 1].id;
+  } else return -1;
+};

@@ -1,3 +1,5 @@
+import "./CollapseNoteList.scss";
+
 import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
@@ -6,19 +8,17 @@ import {
   FormControl,
   InputGroup,
 } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
 import {
   authTokenSelector,
   userIdSelector,
 } from "../../../auth/services/authSlice";
-import { todoAction } from "../../services/todoSlice";
 import {
   addNoteThunk,
   deleteNoteThunk,
   editNoteThunk,
 } from "../../services/todoThunk";
-import "./CollapseNoteList.scss";
 
 // import {} from "bootstrap-icons";
 const CollapseNoteList = ({ id, notes }) => {
@@ -117,7 +117,7 @@ const CollapseNoteList = ({ id, notes }) => {
                 >
                   <Button
                     variant="primary"
-                    className="mb-3"
+                    className="mr-1"
                     onClick={() => {
                       isEdit[index] = !isEdit[index];
                       setIsEdit([...isEdit]);
