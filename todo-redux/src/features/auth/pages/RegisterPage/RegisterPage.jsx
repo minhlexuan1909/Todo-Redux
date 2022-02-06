@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { AuthForm } from "../../components/AuthForm";
+import { isRegisteredSuccessfullySelector } from "../../services/authSlice";
 import { registerThunk } from "../../services/authThunk";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const isRegisteredSuccesfully = useSelector(isRegisteredSuccessfullySelector);
+
   const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -37,6 +43,12 @@ const RegisterPage = () => {
   const handlePasswordConfirmChange = (e) => {
     setPasswordConfirm(e.target.value);
   };
+  useEffect(() => {
+    if (isRegisteredSuccesfully) {
+      return navigate("/login");
+    }
+  }, [isRegisteredSuccesfully]);
+
   return (
     <div>
       <AuthForm title={"Register"}>

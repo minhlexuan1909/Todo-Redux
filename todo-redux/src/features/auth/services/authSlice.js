@@ -7,6 +7,7 @@ const authSlice = createSlice({
   initialState: {
     userId: localStorage.getItem("userId"),
     token: localStorage.getItem("token"),
+    isRegisteredSuccessfully: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -30,6 +31,7 @@ const authSlice = createSlice({
         toast.error(errRegisterMessage);
       } else {
         toast.success("Account created");
+        state.isRegisteredSuccessfully = true
       }
     });
     builder.addCase(logoutThunk.fulfilled, (state, action) => {
@@ -51,3 +53,4 @@ export const authAction = authSlice.actions;
 
 export const userIdSelector = (state) => state.auth.userId;
 export const authTokenSelector = (state) => state.auth.token;
+export const isRegisteredSuccessfullySelector = (state) => state.auth.isRegisteredSuccessfully;
