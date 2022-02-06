@@ -1,9 +1,9 @@
 import "./App.css";
 
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import AppRoute from "./routers";
-import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -18,9 +18,9 @@ function App() {
         pauseOnHover
         theme="colored"
       />
-      <BrowserRouter>
+      <HashRouter basename="/">
         <AppRoute></AppRoute>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }

@@ -27,3 +27,8 @@ remove form validation after submit successfully
 Button cannot be invoked without new
 -> Wrong import because of auto import ("bootstrap" instead of "react-bootstrap")
 
+Deploy routed repo github
+=> Use HashRouter with basename instead of BrowserRouter
+
+Anchor links (<a></a>) and Link from react-router don't work the same way and can't use link because of bootstrap
+=> Add # at the beginning of URL in href (href = "#/dashboard/profile/change-password") to make <a></a> works like Link without using Link directly

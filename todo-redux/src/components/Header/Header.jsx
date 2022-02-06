@@ -1,11 +1,12 @@
 import "./Header.scss";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutThunk } from "../../features/auth/services/authThunk";
+import { Link } from "react-router-dom";
+
 import { authTokenSelector } from "../../features/auth/services/authSlice";
+import { logoutThunk } from "../../features/auth/services/authThunk";
 
 const Header = ({ fullname }) => {
   const dispatch = useDispatch();
@@ -24,11 +25,11 @@ const Header = ({ fullname }) => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <div className="main-nav">
-                <Nav.Link href="/dashboard">List Todo</Nav.Link>
-                <Nav.Link href="/dashboard/create-todo">Create Todo</Nav.Link>
+                <Nav.Link href="#/dashboard">List Todo</Nav.Link>
+                <Nav.Link href="#/dashboard/create-todo">Create Todo</Nav.Link>
               </div>
               <NavDropdown title={`Hello, ${fullname}`} id="basic-nav-dropdown">
-                <NavDropdown.Item href="/dashboard/profile">
+                <NavDropdown.Item href="#/dashboard/profile">
                   Profile
                 </NavDropdown.Item>
                 <NavDropdown.Item onClick={handleLogoutButtonClick}>

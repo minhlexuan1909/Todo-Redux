@@ -11,6 +11,7 @@ import {
 } from "../../services/todoThunk";
 import CollapseNoteList from "../CollapseNoteList/CollapseNoteList";
 import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const Todo = ({ todo }) => {
   const dispatch = useDispatch();
@@ -31,7 +32,6 @@ const Todo = ({ todo }) => {
       token: token,
       isDone: Math.abs(todo.isDone - 1),
     };
-    // dispatch(todoAction.toggleStatusTodo(todo.id));
     dispatch(toggleStatusTodoThunk(data));
   };
 
@@ -55,13 +55,15 @@ const Todo = ({ todo }) => {
               )}
             </div>
             <div>
-              <Button
-                variant="primary"
-                className="mr-2"
-                href={`/dashboard/edit-todo/${todo.id}`}
-              >
-                Edit
-              </Button>
+              <Link to={`/dashboard/edit-todo/${todo.id}`}>
+                <Button
+                  variant="primary"
+                  className="mr-2"
+                  // href={`/dashboard/edit-todo/${todo.id}`}
+                >
+                  Edit
+                </Button>
+              </Link>
               <Button variant="primary" onClick={handleDeleteBtnClick}>
                 Delete
               </Button>

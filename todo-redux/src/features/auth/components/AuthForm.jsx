@@ -3,7 +3,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import React from "react";
 import { Card } from "react-bootstrap";
-import { ToastContainer } from "react-toastify";
 
 export const AuthForm = ({ title, children }) => {
   return (
