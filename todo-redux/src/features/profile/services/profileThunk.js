@@ -29,7 +29,7 @@ export const getInfoThunk = createAsyncThunk(
   async (data) => {
     try {
       const response = await ProfileAPI.getInfo(data.id, data.token);
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (err) {
       return err.response.data;

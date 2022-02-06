@@ -25,16 +25,13 @@ const Header = ({ fullname }) => {
             <Nav className="me-auto">
               <div className="main-nav">
                 <Nav.Link href="/dashboard">List Todo</Nav.Link>
-                <Nav.Link href="/dashboard">Create Todo</Nav.Link>
+                <Nav.Link href="/dashboard/create-todo">Create Todo</Nav.Link>
               </div>
               <NavDropdown title={`Hello, ${fullname}`} id="basic-nav-dropdown">
                 <NavDropdown.Item href="/dashboard/profile">
                   Profile
                 </NavDropdown.Item>
-                <NavDropdown.Item
-                  href="/login"
-                  onClick={handleLogoutButtonClick}
-                >
+                <NavDropdown.Item onClick={handleLogoutButtonClick}>
                   Logout
                 </NavDropdown.Item>
               </NavDropdown>
