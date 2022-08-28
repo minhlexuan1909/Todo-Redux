@@ -32,3 +32,10 @@ Deploy routed repo github
 
 Anchor links (<a></a>) and Link from react-router don't work the same way and can't use link because of bootstrap
 => Add # at the beginning of URL in href (href = "#/dashboard/profile/change-password") to make <a></a> works like Link without using Link directly
+
+immer error
+-> use return and mutate at the same time 
+(state.loadingTodoList = false;
+toast.success("Todolist Loaded");
+return { ...state, todoList: [...action.payload] })
+=> Just use only one way

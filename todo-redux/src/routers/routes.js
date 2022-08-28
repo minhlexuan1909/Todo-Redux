@@ -2,6 +2,7 @@ import LoginPage from "../features/auth/pages/LoginPage/LoginPage";
 import RegisterPage from "../features/auth/pages/RegisterPage/RegisterPage";
 import ChangePasswordPage from "../features/profile/page/ChangePasswordPage/ChangePasswordPage";
 import ProfilePage from "../features/profile/page/ProfilePage/ProfilePage";
+import ProfileTabPage from "../features/profile/page/ProfileTabPage/ProfileTabPage";
 import CreateTodoPage from "../features/todo/pages/CreateTodoPage/CreateTodoPage";
 import DashBoardPage from "../features/todo/pages/DashBoardPage/DashBoardPage";
 import EditTodoPage from "../features/todo/pages/EditTodoPage/EditTodoPage";
@@ -26,11 +27,13 @@ const routes = [
   },
   {
     path: "dashboard/profile/change-password",
-    element: <PrivateRoutes component={<ChangePasswordPage />} />,
+    element: (
+      <PrivateRoutes component={<ProfileTabPage route={"change-password"} />} />
+    ),
   },
   {
     path: "dashboard/profile",
-    element: <PrivateRoutes component={<ProfilePage />} />,
+    element: <PrivateRoutes component={<ProfileTabPage />} />,
   },
   {
     path: "dashboard/create-todo",

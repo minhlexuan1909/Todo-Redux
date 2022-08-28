@@ -1,8 +1,10 @@
 import "./Todo.scss";
 
-import React, { useEffect, useState } from "react";
-import { ButtonGroup, Card, Form } from "react-bootstrap";
+import React from "react";
+import { Button, Card, Form } from "react-bootstrap";
+import { CircularProgress } from "react-cssfx-loading/lib";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 import { authTokenSelector } from "../../../auth/services/authSlice";
 import {
@@ -10,20 +12,21 @@ import {
   toggleStatusTodoThunk,
 } from "../../services/todoThunk";
 import CollapseNoteList from "../CollapseNoteList/CollapseNoteList";
-import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+
+import { motion } from "framer-motion";
 
 const Todo = ({ todo }) => {
   const dispatch = useDispatch();
-  // const id = useSelector(userIdSelector);
   const token = useSelector(authTokenSelector);
 
   const handleDeleteBtnClick = () => {
-    const data = {
-      id: todo.id,
-      token: token,
-    };
-    dispatch(deleteTodoThunk(data));
+    if (window.confirm("Are you sure you want to delete")) {
+      const data = {
+        id: todo.id,
+        token: token,
+      };
+      dispatch(deleteTodoThunk(data));
+    }
   };
 
   const handleStatusClick = () => {
@@ -34,18 +37,32 @@ const Todo = ({ todo }) => {
     };
     dispatch(toggleStatusTodoThunk(data));
   };
-
   return (
-    <div className="todo">
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      className="todo"
+    >
       <Card>
         <Card.Body>
           <Card.Title>
             <div className="todo-content">
-              <Form.Check
-                type="checkbox"
-                checked={todo.isDone}
-                onChange={handleStatusClick}
-              />
+              {todo.loadingToggleStatus ? (
+                <CircularProgress
+                  style={{ marginRight: ".75rem", marginTop: ".25em" }}
+                  color="black"
+                  width="1em"
+                  height="1em"
+                />
+              ) : (
+                <Form.Check
+                  type="checkbox"
+                  disabled={todo.loadingDelete || todo.loadingToggleStatus}
+                  checked={todo.isDone}
+                  onChange={handleStatusClick}
+                />
+              )}
               {todo.isDone ? (
                 <div style={{ textDecoration: "line-through", color: "grey" }}>
                   {todo.name}
@@ -57,40 +74,40 @@ const Todo = ({ todo }) => {
             <div>
               <Link to={`/dashboard/edit-todo/${todo.id}`}>
                 <Button
+                  disabled={todo.loadingDelete || todo.loadingToggleStatus}
                   variant="primary"
                   className="mr-2"
-                  // href={`/dashboard/edit-todo/${todo.id}`}
                 >
                   Edit
                 </Button>
               </Link>
-              <Button variant="primary" onClick={handleDeleteBtnClick}>
-                Delete
-              </Button>
-              {/* <ToggleButton
-                type="check-box"
-                variant={todo.isDone ? "success" : "warning"}
-                onClick={handleStatusClick}
+              <Button
+                disabled={todo.loadingDelete || todo.loadingToggleStatus}
+                variant="primary"
+                onClick={handleDeleteBtnClick}
               >
-                {todo.isDone ? "Done" : "Pending"}
-              </ToggleButton> */}
+                {todo.loadingDelete ? (
+                  <CircularProgress
+                    color="white"
+                    width="1.5rem"
+                    height="1.5rem"
+                  />
+                ) : (
+                  "Delete"
+                )}
+              </Button>
             </div>
           </Card.Title>
 
-          {/* {todo.isDone ? (
-                <Card.Title
-                  style={{ textDecoration: "line-through", color: "grey" }}
-                >
-                  {todo.name}
-                </Card.Title>
-              ) : (
-                <Card.Title>{todo.name}</Card.Title>
-              )} */}
-
-          <CollapseNoteList id={todo.id} notes={todo.notes} />
+          <CollapseNoteList
+            loadingAddNote={todo.loadingAddNote}
+            id={todo.id}
+            notes={todo.notes}
+            enableCollapse={!todo.loadingDelete && !todo.loadingToggleStatus}
+          />
         </Card.Body>
       </Card>
-    </div>
+    </motion.div>
   );
 };
 

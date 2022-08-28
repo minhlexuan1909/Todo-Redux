@@ -1,31 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { CircularProgress } from "react-cssfx-loading/lib";
 import { useDispatch, useSelector } from "react-redux";
 
-import Header from "../../../../components/Header/Header";
-import {
-  authTokenSelector,
-  userIdSelector,
-} from "../../../auth/services/authSlice";
-import ListSetting from "../../components/ListSetting/ListSetting";
+import { authTokenSelector } from "../../../auth/services/authSlice";
 import ProfileForm from "../../components/ProfileForm/ProfileForm";
-import {
-  loadingProfileSelector,
-  nameSelector,
-} from "../../services/profileSlice";
-import { changePasswordThunk, getInfoThunk } from "../../services/profileThunk";
+import { loadingProfileSelector } from "../../services/profileSlice";
+import { changePasswordThunk } from "../../services/profileThunk";
 
 const ChangePasswordPage = () => {
   const dispatch = useDispatch();
 
-  const id = useSelector(userIdSelector);
   const token = useSelector(authTokenSelector);
-  const fullname = useSelector(nameSelector);
   const loadingProfile = useSelector(loadingProfileSelector);
 
-  // const [oldPassword, setOldPassword] = useState("");
-  // const [newPassword, setNewPassword] = useState("");
   const [formData, setFormData] = useState({
     oldPassword: "",
     newPassword: "",
@@ -46,15 +34,7 @@ const ChangePasswordPage = () => {
       [field]: null,
     });
   };
-  // const handleChangePassButtonClick = () => {
-  //   // console.log(token);
-  //   const data = {
-  //     oldPassword: oldPassword,
-  //     newPassword: newPassword,
-  //     token: token,
-  //   };
-  //   dispatch(changePasswordThunk(data));
-  // };
+
   const findValidationErr = () => {
     if (!formData.oldPassword) {
       validationErr.oldPassword = "This cannot be blank";
@@ -80,18 +60,9 @@ const ChangePasswordPage = () => {
       dispatch(changePasswordThunk(data));
     }
   };
-  useEffect(() => {
-    const data = {
-      id: id,
-      token: token,
-    };
-    dispatch(getInfoThunk(data));
-  }, []);
   return (
     <div>
-      <Header fullname={fullname}></Header>
       <div style={{ display: "flex" }}>
-        <ListSetting></ListSetting>
         <ProfileForm title={"Change Password"}>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3 mt-3">

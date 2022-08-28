@@ -39,7 +39,7 @@ export const toggleStatusTodoThunk = createAsyncThunk(
       delete data.token;
       console.log(data);
       const response = await TodoAPI.toggleStatusTodo(data, id, token);
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (err) {
       console.log(err.response.data);
@@ -84,10 +84,10 @@ export const editNoteThunk = createAsyncThunk(
     try {
       const id = data.id;
       const token = data.token;
-      delete data.id;
-      delete data.token;
-      console.log(data);
-      const response = await TodoAPI.editNote(data, id, token);
+      const dataAPI = { ...data };
+      delete dataAPI.id;
+      delete dataAPI.token;
+      const response = await TodoAPI.editNote(id, dataAPI, token);
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -106,7 +106,7 @@ export const addTodoThunk = createAsyncThunk(
       const listNote = data.listNote;
       delete data.listNote;
       const response = await TodoAPI.addTodo(data, token);
-      console.log(response.data);
+      // console.log(response.data);
 
       const todoId = response.data.id;
       if (data.isDone) {
@@ -186,7 +186,7 @@ export const deleteTodoThunk = createAsyncThunk(
       const id = data.id;
       const token = data.token;
       const response = await TodoAPI.deleteTodo(id, token);
-      console.log(response.data);
+      // console.log(response.data);
       return { id: id };
     } catch (err) {
       console.log(err.response.data);

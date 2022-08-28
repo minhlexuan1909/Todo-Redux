@@ -1,87 +1,133 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { CircularProgress } from "react-cssfx-loading/lib";
 import { useDispatch, useSelector } from "react-redux";
 
-import Header from "../../../../components/Header/Header";
 import {
   authTokenSelector,
   userIdSelector,
 } from "../../../auth/services/authSlice";
-import ListSetting from "../../components/ListSetting/ListSetting";
 import ProfileForm from "../../components/ProfileForm/ProfileForm";
 import profileSlice, {
+  createAtSelector,
   emailSelector,
   isEditSelector,
   loadingProfileSelector,
   nameSelector,
   usernameSelector,
 } from "../../services/profileSlice";
-import { editInfoThunk, getInfoThunk } from "../../services/profileThunk";
+import { editInfoThunk } from "../../services/profileThunk";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
 
-  const formRef = useRef();
-
   const id = useSelector(userIdSelector);
   const token = useSelector(authTokenSelector);
   const isEdit = useSelector(isEditSelector);
-
   const usernameInfo = useSelector(usernameSelector);
   const nameInfo = useSelector(nameSelector);
   const emailInfo = useSelector(emailSelector);
+  const createAt = useSelector(createAtSelector);
   const loadingProfile = useSelector(loadingProfileSelector);
 
-  const [nameInput, setNameInput] = useState(nameInfo);
-  const [emailInput, setEmailInput] = useState(emailInfo);
-  const [validated, setValidated] = useState(false);
+  const [createDay, setCreateDay] = useState("");
+  const [validateEff, setValidateEff] = useState(false);
 
+  const [formData, setFormData] = useState({
+    nameInput: "",
+    emailInput: "",
+  });
+
+  const [validationErr, setValidationErr] = useState({
+    nameInput: null,
+    emailInput: null,
+  });
+  const setInputValue = (field, value) => {
+    setValidateEff(false);
+    setFormData({
+      ...formData,
+      [field]: value,
+    });
+
+    setValidationErr({
+      ...validationErr,
+      [field]: null,
+    });
+  };
+
+  const findError = () => {
+    const err = {};
+    if (formData.nameInput === "") {
+      err.nameInput = "This cannot be blank";
+    }
+    if (formData.emailInput === "") {
+      err.emailInput = "This cannot be blank";
+    } else if (
+      !formData.emailInput
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )
+    ) {
+      err.emailInput = "Please enter valid email address";
+    }
+    // const empty = Object.values(err).every((x) => x === null);
+    // if (!empty) setValidateEff(true);
+    setValidationErr(err);
+    return err;
+  };
   const handleSubmit = (e) => {
-    const form = e.currentTarget;
-    console.log("submit");
     e.preventDefault();
     e.stopPropagation();
-    if (!form.checkValidity()) {
-      setValidated(true);
-    } else {
-      setValidated(false);
+    const err = findError();
+    setValidateEff(true);
+    const empty = Object.values(err).every((x) => x === null);
+    if (empty) {
       const data = {
         id: id,
         token: token,
-        name: nameInput,
-        email: emailInput,
+        name: formData.nameInput,
+        email: formData.emailInput,
       };
       dispatch(editInfoThunk(data));
+      setValidateEff(false);
     }
   };
 
   const handleEditBtnClick = () => {
-    // formRef.current.setAttribute("validated", validated);
-    setNameInput(nameInfo);
-    setEmailInput(emailInfo);
+    findError();
     dispatch(profileSlice.actions.toggleIsEdit());
   };
-  useEffect(() => {
-    const data = {
-      id: id,
-      token: token,
-    };
-    dispatch(getInfoThunk(data));
-  }, []);
 
+  useEffect(() => {
+    if (createAt) {
+      const date = new Date(createAt);
+      const options = { year: "numeric", month: "short", day: "numeric" };
+      setCreateDay(date.toLocaleString("en-GB", options).replaceAll(" ", "-"));
+    }
+  }, [createAt]);
+
+  useEffect(() => {
+    setFormData({
+      nameInput: nameInfo,
+      emailInput: emailInfo,
+    });
+  }, [nameInfo, emailInfo]);
+
+  // useEffect(() => {
+  //   findError();
+  // }, []);
+
+  console.log(validationErr);
+  // Data not yet loaded
+  if (loadingProfile && !nameInfo) {
+    return <CircularProgress color="black"></CircularProgress>;
+  }
   return (
     <div>
-      <Header fullname={nameInfo}></Header>
       <div style={{ display: "flex" }}>
-        <ListSetting></ListSetting>
         <ProfileForm title={"Profile"}>
-          <Form
-            ref={formRef}
-            noValidate
-            validated={validated}
-            onSubmit={handleSubmit}
-          >
+          <Form noValidate onSubmit={handleSubmit}>
             <Form.Group className="mb-3 mt-3">
               <Form.Label>Username</Form.Label>
               <Form.Control
@@ -100,11 +146,13 @@ const ProfilePage = () => {
                 disabled={!isEdit}
                 readOnly={!isEdit}
                 required
-                value={isEdit ? nameInput : nameInfo}
-                onChange={(e) => setNameInput(e.target.value)}
+                isInvalid={validationErr.nameInput && validateEff}
+                isValid={!validationErr.nameInput && validateEff}
+                value={isEdit ? formData.nameInput : nameInfo}
+                onChange={(e) => setInputValue("nameInput", e.target.value)}
               />
               <Form.Control.Feedback type="invalid">
-                Please fill out this feild
+                {validationErr.nameInput}
               </Form.Control.Feedback>
             </Form.Group>
 
@@ -115,14 +163,21 @@ const ProfilePage = () => {
                 // placeholder={emailInfo}
                 disabled={!isEdit}
                 readOnly={!isEdit}
-                value={isEdit ? emailInput : emailInfo}
-                onChange={(e) => setEmailInput(e.target.value)}
+                required
+                isInvalid={validationErr.emailInput && validateEff}
+                isValid={!validationErr.emailInput && validateEff}
+                value={isEdit ? formData.emailInput : emailInfo}
+                onChange={(e) => setInputValue("emailInput", e.target.value)}
               />
               <Form.Control.Feedback type="invalid">
-                Please enter valid email address
+                {validationErr.emailInput}
               </Form.Control.Feedback>
             </Form.Group>
 
+            <Form.Group className="mb-3 mt-3">
+              <Form.Label>Created day</Form.Label>
+              <Form.Control type="text" disabled readOnly value={createDay} />
+            </Form.Group>
             {isEdit ? (
               <div className="buttons">
                 <Button
@@ -130,7 +185,6 @@ const ProfilePage = () => {
                   variant="success"
                   className="mr-3"
                   type="submit"
-                  // onClick={handleSaveButtonClick}
                 >
                   {loadingProfile ? (
                     <CircularProgress

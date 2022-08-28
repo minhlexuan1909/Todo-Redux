@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { authTokenSelector } from "../../auth/services/authSlice";
+
 import ProfileAPI from "../api/ProfileAPI";
+
 export const changePasswordThunk = createAsyncThunk(
   "profile/changePasswordThunk",
   async (data) => {
@@ -13,6 +14,7 @@ export const changePasswordThunk = createAsyncThunk(
       };
       console.log(APIdata);
       const response = await ProfileAPI.changePassword(APIdata, token);
+      // console.log(response);
       const returnData = {
         newPassword: data.newPassword,
       };

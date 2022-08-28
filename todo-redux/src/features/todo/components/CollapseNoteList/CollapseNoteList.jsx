@@ -1,6 +1,6 @@
 import "./CollapseNoteList.scss";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Button,
   Card,
@@ -10,10 +10,12 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
+import CircularProgressForButton from "../../../../components/CircularProgressForButton/CircularProgressForButton";
 import {
   authTokenSelector,
   userIdSelector,
 } from "../../../auth/services/authSlice";
+import { todoAction } from "../../services/todoSlice";
 import {
   addNoteThunk,
   deleteNoteThunk,
@@ -21,15 +23,16 @@ import {
 } from "../../services/todoThunk";
 
 // import {} from "bootstrap-icons";
-const CollapseNoteList = ({ id, notes }) => {
+const CollapseNoteList = ({ loadingAddNote, id, notes, enableCollapse }) => {
   const dispatch = useDispatch();
   const userId = useSelector(userIdSelector);
   const token = useSelector(authTokenSelector);
 
   const buttonRef = useRef([]);
   const [open, setOpen] = useState(false);
+
   const [newNote, setNewNote] = useState("");
-  const [isEdit, setIsEdit] = useState([]);
+  // const [isEdit, setIsEdit] = useState([]);
   const [editNote, setEditNote] = useState("");
 
   const handleNewNoteChange = (e) => {
@@ -46,6 +49,10 @@ const CollapseNoteList = ({ id, notes }) => {
     dispatch(addNoteThunk({ ...data, token: token }));
     setNewNote("");
   };
+  const handleEditNoteButtonClick = (idNote) => {
+    dispatch(todoAction.toggleEditButton(idNote));
+  };
+
   const handleDeleteNoteButtonClick = (id) => {
     const data = {
       id: id,
@@ -61,15 +68,16 @@ const CollapseNoteList = ({ id, notes }) => {
       content: editNote,
     };
     dispatch(editNoteThunk(data));
-    isEdit[index] = !isEdit[index];
-    setIsEdit([...isEdit]);
+    // isEdit[index] = !isEdit[index];
+    // setIsEdit([...isEdit]);
     setEditNote("");
   };
 
-  useEffect(() => {
-    notes.map((note, index) => setIsEdit([...isEdit, false]));
-    // console.log(notes);
-  }, []);
+  // useEffect(() => {
+  //   // notes.map((note, index) => setIsEdit([...isEdit, false]));
+  //   // console.log(notes);
+  // }, []);
+  // console.log(notes);
   return (
     <div className="note-list">
       <Button
@@ -80,26 +88,26 @@ const CollapseNoteList = ({ id, notes }) => {
       >
         Notes
       </Button>
-      <Collapse in={open} className="w-100">
+      <Collapse in={open && enableCollapse} className="w-100">
         <div id="example-collapse-text">
           {notes.map((note, index) => (
             <Card
               key={index}
               onMouseEnter={(e) => {
-                if (!isEdit[index]) {
+                if (!note.isEditNote) {
                   buttonRef.current[index].classList.add("appear");
                   buttonRef.current[index].classList.remove("disappear");
                 }
               }}
               onMouseLeave={() => {
-                if (!isEdit[index]) {
+                if (!note.isEditNote) {
                   buttonRef.current[index].classList.add("disappear");
                   buttonRef.current[index].classList.remove("appear");
                 }
               }}
             >
               <Card.Body>
-                {isEdit[index] ? (
+                {note.isEditNote ? (
                   <FormControl
                     className="mr-3"
                     value={editNote}
@@ -112,34 +120,42 @@ const CollapseNoteList = ({ id, notes }) => {
                 <div
                   ref={(el) => (buttonRef.current[index] = el)}
                   className={`buttons ${
-                    isEdit[index] ? "appear" : "disappear"
+                    note.isEditNote ? "appear" : "disappear"
                   }`}
                 >
                   <Button
+                    disabled={note.loadingEditNote}
                     variant="primary"
                     className="mr-1"
-                    onClick={() => {
-                      isEdit[index] = !isEdit[index];
-                      setIsEdit([...isEdit]);
-                    }}
+                    onClick={() => handleEditNoteButtonClick(note.id)}
                   >
                     <i className="bi bi-pencil-fill"></i>
                   </Button>
-                  {isEdit[index] ? (
+                  {note.isEditNote ? (
                     <Button
+                      disabled={note.loadingEditNote}
                       variant="success"
                       onClick={() =>
                         handleSubmitEditNoteButtonClick(index, note.id)
                       }
                     >
-                      <i className="bi bi-file-earmark-post-fill"></i>
+                      {note.loadingEditNote ? (
+                        <CircularProgressForButton />
+                      ) : (
+                        <i className="bi bi-file-earmark-post-fill"></i>
+                      )}
                     </Button>
                   ) : (
                     <Button
+                      disabled={note.loadingDeleteNote}
                       variant="danger"
                       onClick={() => handleDeleteNoteButtonClick(note.id)}
                     >
-                      <i className="bi bi-x-lg"></i>
+                      {note.loadingDeleteNote ? (
+                        <CircularProgressForButton />
+                      ) : (
+                        <i className="bi bi-x-lg"></i>
+                      )}
                     </Button>
                   )}
                 </div>
@@ -152,8 +168,12 @@ const CollapseNoteList = ({ id, notes }) => {
               value={newNote}
               onChange={handleNewNoteChange}
             />
-            <Button variant="success" onClick={handleAddNoteButtonClick}>
-              Add
+            <Button
+              disabled={loadingAddNote}
+              variant="success"
+              onClick={handleAddNoteButtonClick}
+            >
+              {loadingAddNote ? <CircularProgressForButton /> : "Add"}
             </Button>
           </InputGroup>
         </div>

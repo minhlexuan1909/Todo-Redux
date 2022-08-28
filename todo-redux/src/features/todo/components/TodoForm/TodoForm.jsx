@@ -1,6 +1,6 @@
 import "./TodoForm.scss";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Alert, Button, Card, Form, InputGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,6 +11,8 @@ import {
 } from "../../../auth/services/authSlice";
 import { nameSelector } from "../../../profile/services/profileSlice";
 import { addTodoThunk, editTodoThunk } from "../../services/todoThunk";
+import { loadingAddOrEditTodoSelector } from "../../services/todoSlice";
+import { CircularProgress } from "react-cssfx-loading/lib";
 
 const TodoForm = ({ title, todoId, name, isDone, notes }) => {
   const dispatch = useDispatch();
@@ -18,6 +20,7 @@ const TodoForm = ({ title, todoId, name, isDone, notes }) => {
   const id = useSelector(userIdSelector);
   const token = useSelector(authTokenSelector);
   const fullname = useSelector(nameSelector);
+  const loadingAddOrEditTodo = useSelector(loadingAddOrEditTodoSelector);
 
   const [checked, setChecked] = useState(isDone);
   const [newTodo, setNewtodo] = useState(name);
@@ -32,12 +35,11 @@ const TodoForm = ({ title, todoId, name, isDone, notes }) => {
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
+    event.preventDefault();
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
       setValidated(true);
     } else {
-      event.preventDefault();
       if (title === "Create") {
         setValidated(false);
         const data = {
@@ -92,6 +94,7 @@ const TodoForm = ({ title, todoId, name, isDone, notes }) => {
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
               <Form.Check
                 type="checkbox"
+                disabled={loadingAddOrEditTodo}
                 label="Done"
                 checked={checked}
                 onChange={() => setChecked(Math.abs(checked - 1))}
@@ -139,6 +142,7 @@ const TodoForm = ({ title, todoId, name, isDone, notes }) => {
             <div className="buttons">
               {title === "Create" ? (
                 <Button
+                  disabled={loadingAddOrEditTodo}
                   className="mb-2 add-note-btn"
                   variant="success"
                   onClick={handleAddNoteBtnClick}
@@ -149,8 +153,20 @@ const TodoForm = ({ title, todoId, name, isDone, notes }) => {
               ) : (
                 ""
               )}
-              <Button variant="primary" type="submit">
-                {title}
+              <Button
+                disabled={loadingAddOrEditTodo}
+                variant="primary"
+                type="submit"
+              >
+                {loadingAddOrEditTodo ? (
+                  <CircularProgress
+                    color="white"
+                    width="1.5rem"
+                    height="1.5rem"
+                  />
+                ) : (
+                  title
+                )}
               </Button>
             </div>
           </Form>
